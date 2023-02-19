@@ -1,0 +1,17 @@
+{
+  "name": "tester_alfa_2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@siteimprove/alfa-act": "^0.58.0",
+    "@siteimprove/alfa-rules": "^0.58.0",
+    "@siteimprove/alfa-scraper": "^0.58.0",
+    "dotenv": "^16.0.3"
+  }
+}
