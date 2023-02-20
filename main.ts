@@ -77,7 +77,7 @@ let rulesDictionary: { [key: string]: string[] } = {
   'https://alfa.siteimprove.com/rules/sia-r66': ['1.4.6'],
   'https://alfa.siteimprove.com/rules/sia-r67': ['1.1.1'],
   'https://alfa.siteimprove.com/rules/sia-r68': ['1.3.1'],
-  'https://alfa.siteimprove.com/rules/sia-r69': ['1.4.4', '1.4.6'],
+  'https://alfa.siteimprove.com/rules/sia-r69': ['1.4.3', '1.4.6'],
   'https://alfa.siteimprove.com/rules/sia-r6': ['3.1.1'],
   'https://alfa.siteimprove.com/rules/sia-r70': ['NULL'],
   'https://alfa.siteimprove.com/rules/sia-r71': ['1.4.8'],
@@ -115,69 +115,51 @@ let rulesDictionary: { [key: string]: string[] } = {
 };
 const ALFA_ALL_RULES = 35;
 
-let rulesNotFollowedSet = new Set();
+let rulesNotFollowedSet = new Set<string>();
+var makeSet:any = []
 
-let httpList = [
-  "https://www.aiims.edu/en.html",
-  "www.igib.res.in",
-  "https://www.igib.res.in/",
-  "https://bobbyhadz.com/blog/javascript-typeerror-string-split-is-not-a-function#:~:text=The%20%22split%20is%20not%20a,the%20split%20method%20on%20strings.",
-  "https://www.w3schools.com/js/js_object_sets.asp",
-  "https://www.w3schools.com/js/js_const.asp",
-  "https://www.w3schools.com/js/js_loop_for.asp",
-  "https://www.w3.org/TR/WCAG21/#link-purpose-in-context",
-  "https://www.learningcontainer.com/mp4-sample-video-files-download/#",
-  "https://habitica.com/",
-  "https://docs.google.com/document/d/1deRJ2xaMBan5dLiMHDhj-NvO3Mf_mZlIhP5qdVZT51U/edit",
-  "https://mail.google.com/mail/u/1/#inbox",
-  "https://example.com/",
-];
+async function evaluateUrlAlfa(urlInput: string):Promise<any[]> {
+  await Scraper.with(async (scraper) => {
+    var outcomes;
+    for (const input of await scraper.scrape(urlInput)) {
+      outcomes = await Audit.of(input, rules).evaluate();
+      //console.log("Input: ", input)
+      //console.log("Rules: ", rules)
+    }
+    //console.log(typeof outcomes)
+    if (outcomes !== undefined) {
+      const values = [...outcomes]
+      values.forEach((jsonObj: any) => {
+        //console.log(jsonObj)
+        if (findUriForFailed(jsonObj) !== '') {
+          rulesDictionary[findUriForFailed(jsonObj)].forEach((element) => {
+            if (element !== 'NULL') {
+              rulesNotFollowedSet.add(element)
+            }
+          })
+        }
+      })
+      makeSet = [...rulesNotFollowedSet]
+      //console.log(makeSet)
+      
+      //   for (let key of Object.keys(values)) {
+      //     console.log(values[key]);
+      // }
+      //loopKeys(values);
+    }
+    //console.log(outcomes)
+  });
+  //console.log("returning already",makeSet)
+  return makeSet;
+}
 
-Scraper.with(async (scraper) => {
-  var outcomes;
-  for (const input of await scraper.scrape(httpList[2])) {
-    outcomes = await Audit.of(input, rules).evaluate();
-    //console.log("Input: ", input)
-    //console.log("Rules: ", rules)
-  }
-  //console.log(typeof outcomes)
-  if (outcomes !== undefined) {
-    const values = [...outcomes]
-    //console.log(values[1])
-    //console.log("FOUND URI: ", findUri(values[1]))
-    //console.log("Dictionary", rulesDictionary[findUri(values[1])])
+// function getSetOfFailedRules(outcomes:any):Set<string>{
 
-    values.forEach((jsonObj) => {
-      //console.log(jsonObj)
-
-      if (findUriForFailed(jsonObj) !== '') {
-        rulesDictionary[findUriForFailed(jsonObj)].forEach((element) => {
-          if (element !== 'NULL') {
-            rulesNotFollowedSet.add(element)
-          }
-        })
-      }
-    })
-
-
-
-    console.log(evaluateScore(rulesNotFollowedSet.size))
-    console.log("TO Percent", toPercent(evaluateScore(rulesNotFollowedSet.size)))
-    console.log("Testing Set", rulesNotFollowedSet)
-    //   for (let key of Object.keys(values)) {
-    //     console.log(values[key]);
-    // }
-    //loopKeys(values);
-  }
-
-  //console.log(outcomes)
-});
-
-
+// }
 
 function findUriForFailed(obj: any): string {
   if (obj._outcome === 'failed') {
-    console.log(obj)
+    //console.log(obj)
     return findUri(obj);
   }
   else {
@@ -200,7 +182,7 @@ function findUri(obj: any): string {
 
 }
 
-function evaluateScore(rulesNotFollowed: any) {
+function evaluateScore(rulesNotFollowed: number): number {
   return ALFA_ALL_RULES - rulesNotFollowed
 }
 
@@ -217,3 +199,5 @@ function toPercent(value: number): number {
     return returnValue;
   }
 }
+
+export { evaluateUrlAlfa, evaluateScore, toPercent }

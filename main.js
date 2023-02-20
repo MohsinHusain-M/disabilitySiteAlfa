@@ -72,6 +72,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     return to.concat(ar || Array.prototype.slice.call(from));
 };
 exports.__esModule = true;
+exports.toPercent = exports.evaluateScore = exports.evaluateUrlAlfa = void 0;
 var alfa_act_1 = require("@siteimprove/alfa-act");
 var alfa_scraper_1 = require("@siteimprove/alfa-scraper");
 var alfa_rules_1 = require("@siteimprove/alfa-rules");
@@ -149,7 +150,7 @@ var rulesDictionary = {
     'https://alfa.siteimprove.com/rules/sia-r66': ['1.4.6'],
     'https://alfa.siteimprove.com/rules/sia-r67': ['1.1.1'],
     'https://alfa.siteimprove.com/rules/sia-r68': ['1.3.1'],
-    'https://alfa.siteimprove.com/rules/sia-r69': ['1.4.4', '1.4.6'],
+    'https://alfa.siteimprove.com/rules/sia-r69': ['1.4.3', '1.4.6'],
     'https://alfa.siteimprove.com/rules/sia-r6': ['3.1.1'],
     'https://alfa.siteimprove.com/rules/sia-r70': ['NULL'],
     'https://alfa.siteimprove.com/rules/sia-r71': ['1.4.8'],
@@ -187,85 +188,83 @@ var rulesDictionary = {
 };
 var ALFA_ALL_RULES = 35;
 var rulesNotFollowedSet = new Set();
-var httpList = [
-    "https://www.aiims.edu/en.html",
-    "www.igib.res.in",
-    "https://www.igib.res.in/",
-    "https://bobbyhadz.com/blog/javascript-typeerror-string-split-is-not-a-function#:~:text=The%20%22split%20is%20not%20a,the%20split%20method%20on%20strings.",
-    "https://www.w3schools.com/js/js_object_sets.asp",
-    "https://www.w3schools.com/js/js_const.asp",
-    "https://www.w3schools.com/js/js_loop_for.asp",
-    "https://www.w3.org/TR/WCAG21/#link-purpose-in-context",
-    "https://www.learningcontainer.com/mp4-sample-video-files-download/#",
-    "https://habitica.com/",
-    "https://docs.google.com/document/d/1deRJ2xaMBan5dLiMHDhj-NvO3Mf_mZlIhP5qdVZT51U/edit",
-    "https://mail.google.com/mail/u/1/#inbox",
-    "https://example.com/",
-];
-alfa_scraper_1.Scraper["with"](function (scraper) { return __awaiter(void 0, void 0, void 0, function () {
-    var outcomes, _a, _b, input, e_1_1, values;
-    var e_1, _c;
-    return __generator(this, function (_d) {
-        switch (_d.label) {
-            case 0:
-                _d.trys.push([0, 6, 7, 8]);
-                return [4 /*yield*/, scraper.scrape(httpList[2])];
-            case 1:
-                _a = __values.apply(void 0, [_d.sent()]), _b = _a.next();
-                _d.label = 2;
-            case 2:
-                if (!!_b.done) return [3 /*break*/, 5];
-                input = _b.value;
-                return [4 /*yield*/, alfa_act_1.Audit.of(input, alfa_rules_1["default"]).evaluate()];
-            case 3:
-                outcomes = _d.sent();
-                _d.label = 4;
-            case 4:
-                _b = _a.next();
-                return [3 /*break*/, 2];
-            case 5: return [3 /*break*/, 8];
-            case 6:
-                e_1_1 = _d.sent();
-                e_1 = { error: e_1_1 };
-                return [3 /*break*/, 8];
-            case 7:
-                try {
-                    if (_b && !_b.done && (_c = _a["return"])) _c.call(_a);
-                }
-                finally { if (e_1) throw e_1.error; }
-                return [7 /*endfinally*/];
-            case 8:
-                //console.log(typeof outcomes)
-                if (outcomes !== undefined) {
-                    values = __spreadArray([], __read(outcomes), false);
-                    //console.log(values[1])
-                    //console.log("FOUND URI: ", findUri(values[1]))
-                    //console.log("Dictionary", rulesDictionary[findUri(values[1])])
-                    values.forEach(function (jsonObj) {
-                        //console.log(jsonObj)
-                        if (findUriForFailed(jsonObj) !== '') {
-                            rulesDictionary[findUriForFailed(jsonObj)].forEach(function (element) {
-                                if (element !== 'NULL') {
-                                    rulesNotFollowedSet.add(element);
-                                }
-                            });
-                        }
-                    });
-                    console.log(evaluateScore(rulesNotFollowedSet.size));
-                    console.log("TO Percent", toPercent(evaluateScore(rulesNotFollowedSet.size)));
-                    console.log("Testing Set", rulesNotFollowedSet);
-                    //   for (let key of Object.keys(values)) {
-                    //     console.log(values[key]);
-                    // }
-                    //loopKeys(values);
-                }
-                return [2 /*return*/];
-        }
+var makeSet = [];
+function evaluateUrlAlfa(urlInput) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _this = this;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, alfa_scraper_1.Scraper["with"](function (scraper) { return __awaiter(_this, void 0, void 0, function () {
+                        var outcomes, _a, _b, input, e_1_1, values;
+                        var e_1, _c;
+                        return __generator(this, function (_d) {
+                            switch (_d.label) {
+                                case 0:
+                                    _d.trys.push([0, 6, 7, 8]);
+                                    return [4 /*yield*/, scraper.scrape(urlInput)];
+                                case 1:
+                                    _a = __values.apply(void 0, [_d.sent()]), _b = _a.next();
+                                    _d.label = 2;
+                                case 2:
+                                    if (!!_b.done) return [3 /*break*/, 5];
+                                    input = _b.value;
+                                    return [4 /*yield*/, alfa_act_1.Audit.of(input, alfa_rules_1["default"]).evaluate()];
+                                case 3:
+                                    outcomes = _d.sent();
+                                    _d.label = 4;
+                                case 4:
+                                    _b = _a.next();
+                                    return [3 /*break*/, 2];
+                                case 5: return [3 /*break*/, 8];
+                                case 6:
+                                    e_1_1 = _d.sent();
+                                    e_1 = { error: e_1_1 };
+                                    return [3 /*break*/, 8];
+                                case 7:
+                                    try {
+                                        if (_b && !_b.done && (_c = _a["return"])) _c.call(_a);
+                                    }
+                                    finally { if (e_1) throw e_1.error; }
+                                    return [7 /*endfinally*/];
+                                case 8:
+                                    //console.log(typeof outcomes)
+                                    if (outcomes !== undefined) {
+                                        values = __spreadArray([], __read(outcomes), false);
+                                        values.forEach(function (jsonObj) {
+                                            //console.log(jsonObj)
+                                            if (findUriForFailed(jsonObj) !== '') {
+                                                rulesDictionary[findUriForFailed(jsonObj)].forEach(function (element) {
+                                                    if (element !== 'NULL') {
+                                                        rulesNotFollowedSet.add(element);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                        makeSet = __spreadArray([], __read(rulesNotFollowedSet), false);
+                                        //console.log(makeSet)
+                                        //   for (let key of Object.keys(values)) {
+                                        //     console.log(values[key]);
+                                        // }
+                                        //loopKeys(values);
+                                    }
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
+                case 1:
+                    _a.sent();
+                    //console.log("returning already",makeSet)
+                    return [2 /*return*/, makeSet];
+            }
+        });
     });
-}); });
+}
+exports.evaluateUrlAlfa = evaluateUrlAlfa;
+// function getSetOfFailedRules(outcomes:any):Set<string>{
+// }
 function findUriForFailed(obj) {
     if (obj._outcome === 'failed') {
-        console.log(obj);
+        //console.log(obj)
         return findUri(obj);
     }
     else {
@@ -289,6 +288,7 @@ function findUri(obj) {
 function evaluateScore(rulesNotFollowed) {
     return ALFA_ALL_RULES - rulesNotFollowed;
 }
+exports.evaluateScore = evaluateScore;
 function toPercent(value) {
     var returnValue = 0.0;
     try {
@@ -304,3 +304,4 @@ function toPercent(value) {
         return returnValue;
     }
 }
+exports.toPercent = toPercent;
