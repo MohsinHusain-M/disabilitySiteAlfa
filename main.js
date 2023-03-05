@@ -251,6 +251,7 @@ var indianGuidelinesSet = ['1.1.1',
     '4.1.1',
     '4.1.2'
 ];
+var isJsonEmpty = true;
 var rulesNotFollowedSet = new Set();
 var makeSet = [];
 function evaluateUrlAlfa(urlInput, guideLineType) {
@@ -264,35 +265,39 @@ function evaluateUrlAlfa(urlInput, guideLineType) {
                         return __generator(this, function (_d) {
                             switch (_d.label) {
                                 case 0:
-                                    _d.trys.push([0, 6, 7, 8]);
-                                    return [4 /*yield*/, scraper.scrape(urlInput)];
+                                    isJsonEmpty = true;
+                                    _d.label = 1;
                                 case 1:
-                                    _a = __values.apply(void 0, [_d.sent()]), _b = _a.next();
-                                    _d.label = 2;
+                                    _d.trys.push([1, 7, 8, 9]);
+                                    return [4 /*yield*/, scraper.scrape(urlInput)];
                                 case 2:
-                                    if (!!_b.done) return [3 /*break*/, 5];
+                                    _a = __values.apply(void 0, [_d.sent()]), _b = _a.next();
+                                    _d.label = 3;
+                                case 3:
+                                    if (!!_b.done) return [3 /*break*/, 6];
                                     input = _b.value;
                                     return [4 /*yield*/, alfa_act_1.Audit.of(input, alfa_rules_1["default"]).evaluate()];
-                                case 3:
-                                    outcomes = _d.sent();
-                                    _d.label = 4;
                                 case 4:
+                                    outcomes = _d.sent();
+                                    _d.label = 5;
+                                case 5:
                                     _b = _a.next();
-                                    return [3 /*break*/, 2];
-                                case 5: return [3 /*break*/, 8];
-                                case 6:
+                                    return [3 /*break*/, 3];
+                                case 6: return [3 /*break*/, 9];
+                                case 7:
                                     e_1_1 = _d.sent();
                                     e_1 = { error: e_1_1 };
-                                    return [3 /*break*/, 8];
-                                case 7:
+                                    return [3 /*break*/, 9];
+                                case 8:
                                     try {
                                         if (_b && !_b.done && (_c = _a["return"])) _c.call(_a);
                                     }
                                     finally { if (e_1) throw e_1.error; }
                                     return [7 /*endfinally*/];
-                                case 8:
+                                case 9:
                                     //console.log(typeof outcomes)
                                     if (outcomes !== undefined) {
+                                        isJsonEmpty = false;
                                         values = __spreadArray([], __read(outcomes), false);
                                         values.forEach(function (jsonObj) {
                                             //console.log(jsonObj)
@@ -361,6 +366,9 @@ function findUri(obj) {
     return '';
 }
 function evaluateScore(rulesNotFollowed, guideLineType) {
+    if (isJsonEmpty === true) {
+        return 0;
+    }
     return ruleCount[guideLineType] - rulesNotFollowed;
 }
 exports.evaluateScore = evaluateScore;

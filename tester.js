@@ -20,7 +20,7 @@ let httpList = [
 
   var htttpSelected = 3;
   var messageList = [];
-  var guidelineSelected = 1
+  var guidelineSelected = 3;
   /**
   * Main Testing Code Function calls
   */

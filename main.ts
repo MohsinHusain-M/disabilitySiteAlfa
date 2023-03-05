@@ -180,11 +180,13 @@ let indianGuidelinesSet: string[] = ['1.1.1',
   '4.1.2'
 ]
 
+var isJsonEmpty = true;
 let rulesNotFollowedSet = new Set<string>();
 var makeSet: any = []
 async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise<any[]> {
   await Scraper.with(async (scraper) => {
     var outcomes;
+    isJsonEmpty = true; 
     for (const input of await scraper.scrape(urlInput)) {
       outcomes = await Audit.of(input, rules).evaluate();
       //console.log("Input: ", input)
@@ -192,6 +194,7 @@ async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise
     }
     //console.log(typeof outcomes)
     if (outcomes !== undefined) {
+      isJsonEmpty = false;
       const values = [...outcomes]
       values.forEach((jsonObj: any) => {
         //console.log(jsonObj)
@@ -255,6 +258,9 @@ function findUri(obj: any): string {
 }
 
 function evaluateScore(rulesNotFollowed: number, guideLineType: string): number {
+  if(isJsonEmpty === true){
+    return 0;
+  }
   return ruleCount[guideLineType] - rulesNotFollowed
 }
 
