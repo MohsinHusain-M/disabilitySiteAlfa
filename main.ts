@@ -114,11 +114,75 @@ let rulesDictionary: { [key: string]: string[] } = {
   'https://alfa.siteimprove.com/rules/sia-r95': ['2.1.1']
 };
 const ALFA_ALL_RULES = 35;
+let wcagAlfaDictionary: { [key: string]: string } = {
+  '1.1.1': 'A',
+  '1.2.1': 'A',
+  '1.2.2': 'A',
+  '1.2.3': 'A',
+  '1.2.5': 'AA',
+  '1.2.8': 'AAA',
+  '1.3.1': 'A',
+  '1.3.4': 'AA',
+  '1.3.5': 'AA',
+  '1.4.1': 'A',
+  '1.4.2': 'A',
+  '1.4.3': 'AA',
+  '1.4.4': 'AA',
+  '1.4.6': 'AAA',
+  '1.4.8': 'AAA',
+  '1.4.10': 'AA',
+  '1.4.12': 'AA',
+  '2.1.1': 'A',
+  '2.1.3': 'AAA',
+  '2.2.1': 'A',
+  '2.2.4': 'AAA',
+  '2.4.1': 'A',
+  '2.4.2': 'A',
+  '2.4.4': 'A',
+  '2.4.6': 'AA',
+  '2.4.7': 'AA',
+  '2.4.9': 'AAA',
+  '2.5.3': 'A ',
+  '3.1.1': 'A',
+  '3.1.2': 'AA',
+  '3.2.5': 'AAA',
+  '3.3.1': 'A',
+  '4.1.1': 'A',
+  '4.1.2': 'A',
+  '4.1.3': 'AA'
+}
+
+let ruleCount: { [key: string]: number } = { 'A': 17, 'AA': 28, 'AAA': 35, 'InGuideline': 25 }
+let indianGuidelinesSet: string[] = ['1.1.1',
+  '1.2.1',
+  '1.2.2',
+  '1.3.1',
+  '1.4.1',
+  '1.4.2',
+  '1.4.3',
+  '1.4.4',
+  '2.1.1',
+  '2.1.2',
+  '2.1.3',
+  '2.2.1',
+  '2.2.2',
+  '2.4.2',
+  '2.4.3',
+  '2.4.4',
+  '2.4.7',
+  '3.2.1',
+  '3.2.2',
+  '3.2.3',
+  '3.2.4',
+  '3.2.5',
+  '3.3.2',
+  '4.1.1',
+  '4.1.2'
+]
 
 let rulesNotFollowedSet = new Set<string>();
-var makeSet:any = []
-
-async function evaluateUrlAlfa(urlInput: string):Promise<any[]> {
+var makeSet: any = []
+async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise<any[]> {
   await Scraper.with(async (scraper) => {
     var outcomes;
     for (const input of await scraper.scrape(urlInput)) {
@@ -134,14 +198,22 @@ async function evaluateUrlAlfa(urlInput: string):Promise<any[]> {
         if (findUriForFailed(jsonObj) !== '') {
           rulesDictionary[findUriForFailed(jsonObj)].forEach((element) => {
             if (element !== 'NULL') {
-              rulesNotFollowedSet.add(element)
+              if (wcagAlfaDictionary[element] === 'A') {
+                rulesNotFollowedSet.add(element)
+              } else if ((guideLineType === 'AA' || guideLineType === 'AAA') && wcagAlfaDictionary[element] === 'AA') {
+                rulesNotFollowedSet.add(element)
+              } else if (guideLineType === 'AAA' && wcagAlfaDictionary[element] === 'AAA') {
+                rulesNotFollowedSet.add(element)
+              } else if (guideLineType === 'InGuideline' && indianGuidelinesSet.includes(element)) {
+                rulesNotFollowedSet.add(element)
+              }
             }
           })
         }
       })
       makeSet = [...rulesNotFollowedSet]
       //console.log(makeSet)
-      
+
       //   for (let key of Object.keys(values)) {
       //     console.log(values[key]);
       // }
@@ -182,14 +254,14 @@ function findUri(obj: any): string {
 
 }
 
-function evaluateScore(rulesNotFollowed: number): number {
-  return ALFA_ALL_RULES - rulesNotFollowed
+function evaluateScore(rulesNotFollowed: number, guideLineType: string): number {
+  return ruleCount[guideLineType] - rulesNotFollowed
 }
 
-function toPercent(value: number): number {
+function toPercent(value: number, guideLineType: string): number {
   var returnValue: number = 0.0;
   try {
-    returnValue = parseFloat(((value / ALFA_ALL_RULES) * 100).toFixed(2));
+    returnValue = parseFloat(((value / ruleCount[guideLineType]) * 100).toFixed(2));
   } catch (e) {
     console.error("toPercent error:", e);
     console.error("Setting Return Value to 0");

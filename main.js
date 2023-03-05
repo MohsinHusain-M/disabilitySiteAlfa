@@ -187,9 +187,73 @@ var rulesDictionary = {
     'https://alfa.siteimprove.com/rules/sia-r95': ['2.1.1']
 };
 var ALFA_ALL_RULES = 35;
+var wcagAlfaDictionary = {
+    '1.1.1': 'A',
+    '1.2.1': 'A',
+    '1.2.2': 'A',
+    '1.2.3': 'A',
+    '1.2.5': 'AA',
+    '1.2.8': 'AAA',
+    '1.3.1': 'A',
+    '1.3.4': 'AA',
+    '1.3.5': 'AA',
+    '1.4.1': 'A',
+    '1.4.2': 'A',
+    '1.4.3': 'AA',
+    '1.4.4': 'AA',
+    '1.4.6': 'AAA',
+    '1.4.8': 'AAA',
+    '1.4.10': 'AA',
+    '1.4.12': 'AA',
+    '2.1.1': 'A',
+    '2.1.3': 'AAA',
+    '2.2.1': 'A',
+    '2.2.4': 'AAA',
+    '2.4.1': 'A',
+    '2.4.2': 'A',
+    '2.4.4': 'A',
+    '2.4.6': 'AA',
+    '2.4.7': 'AA',
+    '2.4.9': 'AAA',
+    '2.5.3': 'A ',
+    '3.1.1': 'A',
+    '3.1.2': 'AA',
+    '3.2.5': 'AAA',
+    '3.3.1': 'A',
+    '4.1.1': 'A',
+    '4.1.2': 'A',
+    '4.1.3': 'AA'
+};
+var ruleCount = { 'A': 17, 'AA': 28, 'AAA': 35, 'InGuideline': 25 };
+var indianGuidelinesSet = ['1.1.1',
+    '1.2.1',
+    '1.2.2',
+    '1.3.1',
+    '1.4.1',
+    '1.4.2',
+    '1.4.3',
+    '1.4.4',
+    '2.1.1',
+    '2.1.2',
+    '2.1.3',
+    '2.2.1',
+    '2.2.2',
+    '2.4.2',
+    '2.4.3',
+    '2.4.4',
+    '2.4.7',
+    '3.2.1',
+    '3.2.2',
+    '3.2.3',
+    '3.2.4',
+    '3.2.5',
+    '3.3.2',
+    '4.1.1',
+    '4.1.2'
+];
 var rulesNotFollowedSet = new Set();
 var makeSet = [];
-function evaluateUrlAlfa(urlInput) {
+function evaluateUrlAlfa(urlInput, guideLineType) {
     return __awaiter(this, void 0, void 0, function () {
         var _this = this;
         return __generator(this, function (_a) {
@@ -235,7 +299,18 @@ function evaluateUrlAlfa(urlInput) {
                                             if (findUriForFailed(jsonObj) !== '') {
                                                 rulesDictionary[findUriForFailed(jsonObj)].forEach(function (element) {
                                                     if (element !== 'NULL') {
-                                                        rulesNotFollowedSet.add(element);
+                                                        if (wcagAlfaDictionary[element] === 'A') {
+                                                            rulesNotFollowedSet.add(element);
+                                                        }
+                                                        else if ((guideLineType === 'AA' || guideLineType === 'AAA') && wcagAlfaDictionary[element] === 'AA') {
+                                                            rulesNotFollowedSet.add(element);
+                                                        }
+                                                        else if (guideLineType === 'AAA' && wcagAlfaDictionary[element] === 'AAA') {
+                                                            rulesNotFollowedSet.add(element);
+                                                        }
+                                                        else if (guideLineType === 'InGuideline' && indianGuidelinesSet.includes(element)) {
+                                                            rulesNotFollowedSet.add(element);
+                                                        }
                                                     }
                                                 });
                                             }
@@ -285,14 +360,14 @@ function findUri(obj) {
     }
     return '';
 }
-function evaluateScore(rulesNotFollowed) {
-    return ALFA_ALL_RULES - rulesNotFollowed;
+function evaluateScore(rulesNotFollowed, guideLineType) {
+    return ruleCount[guideLineType] - rulesNotFollowed;
 }
 exports.evaluateScore = evaluateScore;
-function toPercent(value) {
+function toPercent(value, guideLineType) {
     var returnValue = 0.0;
     try {
-        returnValue = parseFloat(((value / ALFA_ALL_RULES) * 100).toFixed(2));
+        returnValue = parseFloat(((value / ruleCount[guideLineType]) * 100).toFixed(2));
     }
     catch (e) {
         console.error("toPercent error:", e);

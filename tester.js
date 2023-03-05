@@ -1,6 +1,7 @@
 const calFunctions = require("./main.js");
 
 let httpList = [
+  "https://www.aiims.edu/index.php?lang=en",
     "https://www.aiims.edu/en.html",
     "www.igib.res.in",
     "https://www.igib.res.in/",
@@ -15,9 +16,11 @@ let httpList = [
     "https://mail.google.com/mail/u/1/#inbox",
     "https://example.com/",
   ];
-  
-  var htttpSelected = 2;
+  let guidelineType = ['A','AA','AAA','InGuideline']
+
+  var htttpSelected = 3;
   var messageList = [];
+  var guidelineSelected = 1
   /**
   * Main Testing Code Function calls
   */
@@ -41,7 +44,7 @@ let httpList = [
      /**
       * Website Evaluation Function Call
       */
-     resolve((messageList = calFunctions.evaluateUrlAlfa(httpList[htttpSelected])));
+     resolve((messageList = calFunctions.evaluateUrlAlfa(httpList[htttpSelected],guidelineType[guidelineSelected])));
      ///////////////
    });
    nextPromise
@@ -49,13 +52,14 @@ let httpList = [
          /**
           * Calculation Function Call
           */
+         //console.log("Failed Guideline List", messageList);
          console.log("Failed Guideline", message);
          //console.log("messageList Length", message.length);
          //var rulesNotFollowedSet = calFunctions.getSetOfFailedRules(message);
          console.log("Failed count",message.length)
-         var score = calFunctions.evaluateScore(message.length);
+         var score = calFunctions.evaluateScore(message.length , guidelineType[guidelineSelected]);
          console.log(score);
-         console.log(calFunctions.toPercent(score));
+         console.log(calFunctions.toPercent(score,guidelineType[guidelineSelected]));
      })
      .catch((e) => {
        console.error("error",e);
