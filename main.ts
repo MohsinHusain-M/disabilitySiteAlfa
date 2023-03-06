@@ -156,26 +156,23 @@ let ruleCount: { [key: string]: number } = { 'A': 17, 'AA': 28, 'AAA': 35, 'InGu
 let indianGuidelinesSet: string[] = ['1.1.1',
   '1.2.1',
   '1.2.2',
+  '1.2.3',
+  '1.2.5',
   '1.3.1',
   '1.4.1',
   '1.4.2',
   '1.4.3',
   '1.4.4',
   '2.1.1',
-  '2.1.2',
-  '2.1.3',
   '2.2.1',
-  '2.2.2',
+  '2.4.1',
   '2.4.2',
-  '2.4.3',
   '2.4.4',
+  '2.4.6',
   '2.4.7',
-  '3.2.1',
-  '3.2.2',
-  '3.2.3',
-  '3.2.4',
-  '3.2.5',
-  '3.3.2',
+  '3.1.1',
+  '3.1.2',
+  '3.3.1',
   '4.1.1',
   '4.1.2'
 ]
@@ -186,7 +183,7 @@ var makeSet: any = []
 async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise<any[]> {
   await Scraper.with(async (scraper) => {
     var outcomes;
-    isJsonEmpty = true; 
+    isJsonEmpty = true;
     for (const input of await scraper.scrape(urlInput)) {
       outcomes = await Audit.of(input, rules).evaluate();
       //console.log("Input: ", input)
@@ -258,7 +255,7 @@ function findUri(obj: any): string {
 }
 
 function evaluateScore(rulesNotFollowed: number, guideLineType: string): number {
-  if(isJsonEmpty === true){
+  if (isJsonEmpty === true) {
     return 0;
   }
   return ruleCount[guideLineType] - rulesNotFollowed
