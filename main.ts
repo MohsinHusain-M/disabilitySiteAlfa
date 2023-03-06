@@ -152,7 +152,7 @@ let wcagAlfaDictionary: { [key: string]: string } = {
   '4.1.3': 'AA'
 }
 
-let ruleCount: { [key: string]: number } = { 'A': 17, 'AA': 28, 'AAA': 35, 'InGuideline': 25 }
+let ruleCount: { [key: string]: number } = { 'A': 17, 'AA': 28, 'AAA': 35, 'InGuideline': 22 }
 let indianGuidelinesSet: string[] = ['1.1.1',
   '1.2.1',
   '1.2.2',

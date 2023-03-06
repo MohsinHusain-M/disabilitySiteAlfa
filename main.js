@@ -224,7 +224,7 @@ var wcagAlfaDictionary = {
     '4.1.2': 'A',
     '4.1.3': 'AA'
 };
-var ruleCount = { 'A': 17, 'AA': 28, 'AAA': 35, 'InGuideline': 25 };
+var ruleCount = { 'A': 17, 'AA': 28, 'AAA': 35, 'InGuideline': 22 };
 var indianGuidelinesSet = ['1.1.1',
     '1.2.1',
     '1.2.2',
