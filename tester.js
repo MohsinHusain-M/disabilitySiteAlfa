@@ -1,6 +1,6 @@
 const calFunctions = require("./main.js");
 
-let httpList = [
+let httpList = ["https://csjmu.ac.in/",
   "https://www.aiims.edu/index.php?lang=en",
     "https://www.aiims.edu/en.html",
     "www.igib.res.in",
@@ -18,7 +18,7 @@ let httpList = [
   ];
   let guidelineType = ['A','AA','AAA','InGuideline']
 
-  var htttpSelected = 3;
+  var htttpSelected = 0;
   var messageList = [];
   var guidelineSelected = 3;
   /**
