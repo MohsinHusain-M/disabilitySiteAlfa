@@ -1,9 +1,13 @@
 const calFunctions = require("./main.js");
 
 let httpList = [
+  "https://dducollegedu.ac.in/",
+  "https://registry.gov.in/",
+  "https://aktu.ac.in/",
   "https://www.aiims.edu/index.php?lang=en",
     "https://www.aiims.edu/en.html",
     "www.igib.res.in",
+    "http://csjmu.ac.in/",
     "https://www.igib.res.in/",
     "https://bobbyhadz.com/blog/javascript-typeerror-string-split-is-not-a-function#:~:text=The%20%22split%20is%20not%20a,the%20split%20method%20on%20strings.",
     "https://www.w3schools.com/js/js_object_sets.asp",
@@ -18,9 +22,9 @@ let httpList = [
   ];
   let guidelineType = ['A','AA','AAA','InGuideline']
 
-  var htttpSelected = 3;
+  var htttpSelected = 0;
   var messageList = [];
-  var guidelineSelected = 3;
+  var guidelineSelected = 0;
   /**
   * Main Testing Code Function calls
   */
