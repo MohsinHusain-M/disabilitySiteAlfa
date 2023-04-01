@@ -324,9 +324,11 @@ function evaluateUrlAlfa(urlInput, guideLineType) {
                                         //     console.log(values[key]);
                                         // }
                                         //loopKeys(values);
+                                        scraper.close;
                                     }
                                     else {
                                         console.log("Outcome undefined");
+                                        scraper.close;
                                     }
                                     return [2 /*return*/];
                             }

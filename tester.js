@@ -22,9 +22,9 @@ let httpList = [
   ];
   let guidelineType = ['A','AA','AAA','InGuideline']
 
-  var htttpSelected = 0;
+  var htttpSelected = 4;
   var messageList = [];
-  var guidelineSelected = 0;
+  var guidelineSelected = 3;
   /**
   * Main Testing Code Function calls
   */

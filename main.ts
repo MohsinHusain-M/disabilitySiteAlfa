@@ -179,7 +179,7 @@ let indianGuidelinesSet: string[] = ['1.1.1',
 var isJsonEmpty = true;
 let rulesNotFollowedSet = new Set<string>();
 var makeSet: any = []
-
+var runcounter = 0
 async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise<any[]> {
   await Scraper.with(async (scraper) => {
     var outcomes;
@@ -187,7 +187,7 @@ async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise
     for (const input of await scraper.scrape(urlInput)) {
       outcomes = await Audit.of(input, rules).evaluate();
       //console.log("Input: ", input)
-      //console.log("Rules: ", rules)
+      //console.log("Rules: ", rules)  
     }
     //console.log(typeof outcomes)
     if (outcomes !== undefined) {
@@ -219,9 +219,12 @@ async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise
       //     console.log(values[key]);
       // }
       //loopKeys(values);
+      scraper.close
+    
     } 
     else{
       console.log("Outcome undefined")
+      scraper.close
     }
   });
   //console.log("returning already",makeSet)
@@ -278,5 +281,5 @@ function toPercent(value: number, guideLineType: string): number {
     return returnValue;
   }
 }
-
+  
 export { evaluateUrlAlfa, evaluateScore, toPercent }
