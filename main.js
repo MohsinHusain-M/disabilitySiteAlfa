@@ -76,6 +76,7 @@ exports.toPercent = exports.evaluateScore = exports.evaluateUrlAlfa = void 0;
 var alfa_act_1 = require("@siteimprove/alfa-act");
 var alfa_scraper_1 = require("@siteimprove/alfa-scraper");
 var alfa_rules_1 = require("@siteimprove/alfa-rules");
+var puppeteer = require('puppeteer');
 /**
  * Dictionary for Alfa Rules
  */
@@ -251,14 +252,59 @@ var indianGuidelinesSet = ['1.1.1',
 var isJsonEmpty = true;
 var rulesNotFollowedSet = new Set();
 var makeSet = [];
+var runcounter = 0;
+function getHtml(urlInput) {
+    return __awaiter(this, void 0, void 0, function () {
+        var htmlString, browser, page, data, e_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    htmlString = "";
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 7, , 8]);
+                    return [4 /*yield*/, puppeteer.launch({ executablePath: '/usr/bin/google-chrome' })];
+                case 2:
+                    browser = _a.sent();
+                    return [4 /*yield*/, browser.newPage()];
+                case 3:
+                    page = _a.sent();
+                    return [4 /*yield*/, page.goto(urlInput, { waitUntil: 'networkidle0' })];
+                case 4:
+                    _a.sent();
+                    return [4 /*yield*/, page.evaluate(function () { return document.querySelector('*').outerHTML; })];
+                case 5:
+                    data = _a.sent();
+                    // console.log(data);
+                    htmlString = data;
+                    return [4 /*yield*/, browser.close()];
+                case 6:
+                    _a.sent();
+                    return [3 /*break*/, 8];
+                case 7:
+                    e_1 = _a.sent();
+                    console.log("Error in getHTML", e_1);
+                    isJsonEmpty = true;
+                    return [3 /*break*/, 8];
+                case 8:
+                    console.log("HTML String:", htmlString);
+                    return [2 /*return*/, htmlString];
+            }
+        });
+    });
+}
 function evaluateUrlAlfa(urlInput, guideLineType) {
     return __awaiter(this, void 0, void 0, function () {
+        var urlInputHTML;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, alfa_scraper_1.Scraper["with"](function (scraper) { return __awaiter(_this, void 0, void 0, function () {
-                        var outcomes, _a, _b, input, e_1_1, values;
-                        var e_1, _c;
+                case 0: return [4 /*yield*/, getHtml(urlInput)];
+                case 1:
+                    urlInputHTML = _a.sent();
+                    alfa_scraper_1.Scraper["with"](function (scraper) { return __awaiter(_this, void 0, void 0, function () {
+                        var outcomes, _a, _b, input, e_2_1, values;
+                        var e_2, _c;
                         return __generator(this, function (_d) {
                             switch (_d.label) {
                                 case 0:
@@ -266,7 +312,7 @@ function evaluateUrlAlfa(urlInput, guideLineType) {
                                     _d.label = 1;
                                 case 1:
                                     _d.trys.push([1, 7, 8, 9]);
-                                    return [4 /*yield*/, scraper.scrape(urlInput)];
+                                    return [4 /*yield*/, scraper.scrape(urlInputHTML)];
                                 case 2:
                                     _a = __values.apply(void 0, [_d.sent()]), _b = _a.next();
                                     _d.label = 3;
@@ -282,14 +328,14 @@ function evaluateUrlAlfa(urlInput, guideLineType) {
                                     return [3 /*break*/, 3];
                                 case 6: return [3 /*break*/, 9];
                                 case 7:
-                                    e_1_1 = _d.sent();
-                                    e_1 = { error: e_1_1 };
+                                    e_2_1 = _d.sent();
+                                    e_2 = { error: e_2_1 };
                                     return [3 /*break*/, 9];
                                 case 8:
                                     try {
                                         if (_b && !_b.done && (_c = _a["return"])) _c.call(_a);
                                     }
-                                    finally { if (e_1) throw e_1.error; }
+                                    finally { if (e_2) throw e_2.error; }
                                     return [7 /*endfinally*/];
                                 case 9:
                                     //console.log(typeof outcomes)
@@ -329,13 +375,15 @@ function evaluateUrlAlfa(urlInput, guideLineType) {
                                     else {
                                         console.log("Outcome undefined");
                                         scraper.close;
+                                        if (runcounter < 2) {
+                                            runcounter++;
+                                            evaluateUrlAlfa(urlInput, guideLineType);
+                                        }
                                     }
                                     return [2 /*return*/];
                             }
                         });
-                    }); })];
-                case 1:
-                    _a.sent();
+                    }); });
                     //console.log("returning already",makeSet)
                     return [2 /*return*/, makeSet];
             }

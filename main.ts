@@ -1,7 +1,7 @@
-import { Audit } from "@siteimprove/alfa-act";
+import { Audit, Outcome } from "@siteimprove/alfa-act";
 import { Scraper } from "@siteimprove/alfa-scraper";
 import rules from "@siteimprove/alfa-rules";
-
+const puppeteer = require('puppeteer');
 /**
  * Dictionary for Alfa Rules
  */
@@ -180,11 +180,30 @@ var isJsonEmpty = true;
 let rulesNotFollowedSet = new Set<string>();
 var makeSet: any = []
 var runcounter = 0
+async function getHtml(urlInput: string) {
+  var htmlString = ""
+  try {
+      const browser = await puppeteer.launch({executablePath: '/usr/bin/google-chrome'});
+      const page = await browser.newPage();   
+      await page.goto(urlInput, { waitUntil: 'networkidle0' });
+      const data = await page.evaluate(() => document.querySelector('*').outerHTML);
+      // console.log(data);
+      htmlString=data;
+      await browser.close();
+    } catch (e) {
+      console.log("Error in getHTML", e);
+      isJsonEmpty=true;
+    }
+    console.log("HTML String:",htmlString)
+ return htmlString;
+}
+
 async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise<any[]> {
-  await Scraper.with(async (scraper) => {
+  var urlInputHTML = await getHtml(urlInput);
+  Scraper.with(async (scraper) => {
     var outcomes;
     isJsonEmpty = true;
-    for (const input of await scraper.scrape(urlInput)) {
+    for (const input of await scraper.scrape(urlInputHTML)) {
       outcomes = await Audit.of(input, rules).evaluate();
       //console.log("Input: ", input)
       //console.log("Rules: ", rules)  
@@ -220,11 +239,15 @@ async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise
       // }
       //loopKeys(values);
       scraper.close
-    
-    } 
-    else{
+
+    }
+    else {
       console.log("Outcome undefined")
       scraper.close
+      if (runcounter < 2) {
+        runcounter++
+        evaluateUrlAlfa(urlInput, guideLineType)
+      }
     }
   });
   //console.log("returning already",makeSet)
@@ -281,5 +304,5 @@ function toPercent(value: number, guideLineType: string): number {
     return returnValue;
   }
 }
-  
+
 export { evaluateUrlAlfa, evaluateScore, toPercent }
