@@ -180,33 +180,13 @@ var isJsonEmpty = true;
 let rulesNotFollowedSet = new Set<string>();
 var makeSet: any = []
 
-// async function getHtml(urlInput: string) {
-//   var htmlString = ""
-//   try {
-//     const browser = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome' });
-//     const page = await browser.newPage();
-//     await page.goto(urlInput, { waitUntil: 'networkidle0' });
-//     const data = await page.evaluate(() => document.querySelector('*').outerHTML);
-//     // console.log(data);
-//     htmlString = data;
-//     await browser.close();
-//   } catch (e) {
-//     console.log("Error in getHTML", e);
-//     isJsonEmpty = true;
-//   }
-//   console.log("HTML String:", htmlString)
-//   return htmlString;
-// }
-
 async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise<any[]> {
   await Scraper.with(async (scraper) => {
     var outcomes;
-    console.log(urlInput)
-    console.log(guideLineType)
     isJsonEmpty = true;
     makeSet = []
     rulesNotFollowedSet = new Set<string>()
-    console.log(rulesNotFollowedSet)
+    
     for (const input of await scraper.scrape(urlInput)) {
       outcomes = await Audit.of(input, rules).evaluate().map((outcomes) => [...outcomes]);;
       //console.log("Input: ", input)
@@ -216,7 +196,6 @@ async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise
       //console.log("Outcome:",outcomes)
       //console.log("earl:",earl)
     }
-    //console.log(typeof outcomes)
     if (outcomes !== undefined) {
       isJsonEmpty = false;
       const values = [...outcomes]
@@ -240,12 +219,7 @@ async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise
         }
       })
       makeSet = [...rulesNotFollowedSet]
-      //console.log(makeSet)
-
-      //   for (let key of Object.keys(values)) {
-      //     console.log(values[key]);
-      // }
-      //loopKeys(values);
+     
     } 
     else{
       console.log("Outcome undefined")

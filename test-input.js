@@ -48,11 +48,11 @@ function runProgram() {
                     );
                 }).catch((e) => {
                     console.error("Error in ssl check: ", e);
-                    //console.log("Some error in http check ssl checker");
+                    console.log("Some error in http check ssl checker");
                 });
                 newPromise
                     .then((message) => {
-                        //console.info("ssl Checker Results:", sslResult);
+                        console.info("ssl Checker Results:", sslResult);
                         // console.log(sslResult);
                         // console.log(message);
                         nextPromise = new Promise((resolve, reject) => {

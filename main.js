@@ -252,23 +252,6 @@ var indianGuidelinesSet = ['1.1.1',
 var isJsonEmpty = true;
 var rulesNotFollowedSet = new Set();
 var makeSet = [];
-// async function getHtml(urlInput: string) {
-//   var htmlString = ""
-//   try {
-//     const browser = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome' });
-//     const page = await browser.newPage();
-//     await page.goto(urlInput, { waitUntil: 'networkidle0' });
-//     const data = await page.evaluate(() => document.querySelector('*').outerHTML);
-//     // console.log(data);
-//     htmlString = data;
-//     await browser.close();
-//   } catch (e) {
-//     console.log("Error in getHTML", e);
-//     isJsonEmpty = true;
-//   }
-//   console.log("HTML String:", htmlString)
-//   return htmlString;
-// }
 function evaluateUrlAlfa(urlInput, guideLineType) {
     return __awaiter(this, void 0, void 0, function () {
         var _this = this;
@@ -280,12 +263,9 @@ function evaluateUrlAlfa(urlInput, guideLineType) {
                         return __generator(this, function (_d) {
                             switch (_d.label) {
                                 case 0:
-                                    console.log(urlInput);
-                                    console.log(guideLineType);
                                     isJsonEmpty = true;
                                     makeSet = [];
                                     rulesNotFollowedSet = new Set();
-                                    console.log(rulesNotFollowedSet);
                                     _d.label = 1;
                                 case 1:
                                     _d.trys.push([1, 7, 8, 9]);
@@ -316,7 +296,6 @@ function evaluateUrlAlfa(urlInput, guideLineType) {
                                     finally { if (e_1) throw e_1.error; }
                                     return [7 /*endfinally*/];
                                 case 9:
-                                    //console.log(typeof outcomes)
                                     if (outcomes !== undefined) {
                                         isJsonEmpty = false;
                                         values = __spreadArray([], __read(outcomes), false);
@@ -343,11 +322,6 @@ function evaluateUrlAlfa(urlInput, guideLineType) {
                                             }
                                         });
                                         makeSet = __spreadArray([], __read(rulesNotFollowedSet), false);
-                                        //console.log(makeSet)
-                                        //   for (let key of Object.keys(values)) {
-                                        //     console.log(values[key]);
-                                        // }
-                                        //loopKeys(values);
                                     }
                                     else {
                                         console.log("Outcome undefined");
