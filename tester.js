@@ -1,6 +1,7 @@
 const calFunctions = require("./main.js");
 
 let httpList = [
+  "https://example.com/",
   "https://dducollegedu.ac.in/",
   "https://registry.gov.in/",
   "https://aktu.ac.in/",
@@ -22,7 +23,7 @@ let httpList = [
   ];
   let guidelineType = ['A','AA','AAA','InGuideline']
 
-  var htttpSelected = 4;
+  var htttpSelected = 0;
   var messageList = [];
   var guidelineSelected = 3;
   /**

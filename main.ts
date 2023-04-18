@@ -179,34 +179,42 @@ let indianGuidelinesSet: string[] = ['1.1.1',
 var isJsonEmpty = true;
 let rulesNotFollowedSet = new Set<string>();
 var makeSet: any = []
-var runcounter = 0
-async function getHtml(urlInput: string) {
-  var htmlString = ""
-  try {
-      const browser = await puppeteer.launch({executablePath: '/usr/bin/google-chrome'});
-      const page = await browser.newPage();   
-      await page.goto(urlInput, { waitUntil: 'networkidle0' });
-      const data = await page.evaluate(() => document.querySelector('*').outerHTML);
-      // console.log(data);
-      htmlString=data;
-      await browser.close();
-    } catch (e) {
-      console.log("Error in getHTML", e);
-      isJsonEmpty=true;
-    }
-    console.log("HTML String:",htmlString)
- return htmlString;
-}
+
+// async function getHtml(urlInput: string) {
+//   var htmlString = ""
+//   try {
+//     const browser = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome' });
+//     const page = await browser.newPage();
+//     await page.goto(urlInput, { waitUntil: 'networkidle0' });
+//     const data = await page.evaluate(() => document.querySelector('*').outerHTML);
+//     // console.log(data);
+//     htmlString = data;
+//     await browser.close();
+//   } catch (e) {
+//     console.log("Error in getHTML", e);
+//     isJsonEmpty = true;
+//   }
+//   console.log("HTML String:", htmlString)
+//   return htmlString;
+// }
 
 async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise<any[]> {
-  var urlInputHTML = await getHtml(urlInput);
-  Scraper.with(async (scraper) => {
+  await Scraper.with(async (scraper) => {
     var outcomes;
+    console.log(urlInput)
+    console.log(guideLineType)
     isJsonEmpty = true;
-    for (const input of await scraper.scrape(urlInputHTML)) {
-      outcomes = await Audit.of(input, rules).evaluate();
+    makeSet = []
+    rulesNotFollowedSet = new Set<string>()
+    console.log(rulesNotFollowedSet)
+    for (const input of await scraper.scrape(urlInput)) {
+      outcomes = await Audit.of(input, rules).evaluate().map((outcomes) => [...outcomes]);;
       //console.log("Input: ", input)
-      //console.log("Rules: ", rules)  
+      //console.log("Rules: ", rules)
+      //const earl = outcomes.map((outcome) => outcome.toEARL());
+
+      //console.log("Outcome:",outcomes)
+      //console.log("earl:",earl)
     }
     //console.log(typeof outcomes)
     if (outcomes !== undefined) {
@@ -238,18 +246,12 @@ async function evaluateUrlAlfa(urlInput: string, guideLineType: string): Promise
       //     console.log(values[key]);
       // }
       //loopKeys(values);
-      scraper.close
-
-    }
-    else {
+    } 
+    else{
       console.log("Outcome undefined")
-      scraper.close
-      if (runcounter < 2) {
-        runcounter++
-        evaluateUrlAlfa(urlInput, guideLineType)
-      }
     }
   });
+  console.log("Rules not followed from main",rulesNotFollowedSet)
   //console.log("returning already",makeSet)
   return makeSet;
 }
